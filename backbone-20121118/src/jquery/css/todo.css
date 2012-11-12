@@ -16,14 +16,23 @@
     background-color: #FFFCBD;
 }
 
-#adding button {
+#done button, #adding button {
     height: 26px;
 }
 
-#adding {
+#done, #adding {
     margin-top: 12px;
 }
 
 #banner {
     font-size: 32px;
+}
+
+.item .check {
+    float: left;
+    height: 24px;
+}
+
+.item .note-text {
+    height: 24px;
 }
