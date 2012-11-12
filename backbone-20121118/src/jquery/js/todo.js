@@ -96,7 +96,7 @@ $(function() {
       if(i == page) {
         str += " class='active'";
       }
-      str += "'>" + i + "</a>";
+      str += ">" + i + "</a>";
       if(i < maxPage) {
         str += "&nbsp;";
       }

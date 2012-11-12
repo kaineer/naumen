@@ -124,7 +124,10 @@ Todo.PagingView = Backbone.View.extend({
     var html = "";
 
     _(_.range(1, maxPage + 1)).each(function(i) {
-      html += t({no: i, kls: (i == page) ? "active" : ""});
+      html += t({no: i, kls: (i == page) ? "active" : "non-active"});
+      if(i < maxPage) {
+        html += "&nbsp;";
+      }
     });
 
     this.$el.html(html);
