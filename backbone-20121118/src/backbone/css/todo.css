@@ -44,6 +44,7 @@
 
 #paging {
     margin-bottom: 32px;
+    clear: both;
 }
 
 #paging a {

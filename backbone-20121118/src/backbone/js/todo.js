@@ -58,42 +58,73 @@ Todo.ItemView = Backbone.View.extend({
   
 });
 
+Todo.Paging = Backbone.Model.extend({
+  defaults: {
+    page: 1,
+    pageSize: 5,
+    maxPage: 1
+  },
+  recalc: function(collection) {
+    var pageSize = this.get("pageSize");
+    var maxPage = Math.ceil(collection.size() / pageSize);
+
+    var page = this.get("page");
+    
+    if(page < 1) { page = 1; }
+    if(page > maxPage) { page = maxPage; }
+
+    this.set({page: page, maxPage: maxPage});
+  },
+  needsRender: function() {
+    return this.get("maxPage") > 1;
+  },
+  startOfPage: function() {
+    var page = this.get("page");
+    var pageIdx = page - 1;
+    var pageSize = this.get("pageSize");
+
+    return pageIdx * pageSize;
+  },
+  endOfPage: function() {
+    var page = this.get("page");
+    var pageIdx = page;
+    var pageSize = this.get("pageSize");
+
+    return pageIdx * pageSize;
+  }
+});
+
 Todo.PagingView = Backbone.View.extend({
   el: "#paging",
 
   initialize: function() {
-    this.page = 1;
-    this.pageSize = 5;
+    this.paging = new Todo.Paging();
+    this.pageSize = this.paging.get("pageSize");
     this.collection.on("add clean:done", this.render, this);
+    this.collection.on("add clean:done", this.recalcPaging, this);
+    this.paging.on("change", this.render, this);
   },
 
-  itemTemplate: Handlebars.compile("<a href='#{{no}}'>{{no}}</a>"),
+  itemTemplate: Handlebars.compile("<a href='#{{no}}' class='{{kls}}'>{{no}}</a>"),
 
-  adjustPage: function() {
-    var maxPage = Math.ceil(this.collection.size() / this.pageSize);
-
-    if(this.page < 1) { this.page = 1; }
-    if(this.page > maxPage) { this.page = maxPage; }
+  recalcPaging: function() {
+    this.paging.recalc(this.collection);
   },
   
   render: function() {
     var t = this.itemTemplate;
-    var maxPage = Math.ceil(this.collection.size() / this.pageSize);
+    var maxPage = this.paging.get("maxPage");
+    var page = this.paging.get("page");
     
-    if(maxPage <= 1) {
+    if(!this.paging.needsRender()) {
       this.$el.html("");
       return this;
     }
 
-    this.adjustPage();
-
     var html = "";
 
     _(_.range(1, maxPage + 1)).each(function(i) {
-      html += t({no: i});
-      if(i < maxPage) {
-        html += "&nbsp;";
-      }
+      html += t({no: i, kls: (i == page) ? "active" : ""});
     });
 
     this.$el.html(html);
@@ -108,6 +139,12 @@ Todo.AppView = Backbone.View.extend({
     this.collection.on("add clean:done", this.render, this);
   },
 
+  setPaging: function(paging) {
+    this.paging = paging;
+    
+    this.paging.on("change:page", this.render, this);
+  },
+
   el: "#content",
 
   events: {
@@ -116,12 +153,19 @@ Todo.AppView = Backbone.View.extend({
     "click #done button":   "cleanDone"
   },
 
+  getPageItems: function() {
+    var indexFrom = this.paging.startOfPage();
+    var indexTo = this.paging.endOfPage();
+
+    return this.collection.toArray().slice(indexFrom, indexTo);
+  },
+
   render: function() {
     var itemsContainer = this.$el.find("#items");
     itemsContainer.empty();
 
     var appView = this;
-    this.collection.each(function(model) {
+    _(this.getPageItems()).each(function(model) {
       var view = new Todo.ItemView({model: model});
       itemsContainer.append(view.render().$el);
     });
@@ -145,6 +189,11 @@ Todo.AppView = Backbone.View.extend({
       this.collection.reject(function(item) { return item.get("done"); })
     );
     this.collection.trigger("clean:done");
+
+    if(this.router) {
+      console.log("boom");
+      this.router.navigate(this.paging.get("page") + "");
+    }
   }
 });
 
@@ -152,9 +201,9 @@ Todo.AppView = Backbone.View.extend({
 $(function() {
   //
   _.extend(Todo, {
-    pageSize: 5,
-    items: [],
-    page: 1,
+    // pageSize: 5,
+    // items: [],
+    // page: 1,
     load: function() {
       var json;
 
@@ -174,8 +223,32 @@ $(function() {
   
   var App = new Todo.AppView({collection: Todo.items});
   Todo.app = App;
-  App.render();
+  // App.render();
 
-  var Paging = new Todo.PagingView({collection: Todo.items});
-  Paging.render();
+  var pagingView = new Todo.PagingView({collection: Todo.items});
+  // pagingView.render();
+
+  App.setPaging(pagingView.paging);
+
+  pagingView.paging.recalc(App.collection);
+
+  pagingView.render();
+  App.render();
+  
+
+  Todo.Router = Backbone.Router.extend({
+    routes: {
+      "": "page",
+      ":page": "page"
+    },
+    
+    page: function(pageNo) {
+      pageNo || (pageNo = 1);
+      pagingView.paging.set({page: pageNo});
+    }
+  });
+
+  App.router = new Todo.Router();
+
+  Backbone.history.start();
 });
