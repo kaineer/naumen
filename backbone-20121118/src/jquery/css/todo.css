@@ -36,3 +36,8 @@
 .item .note-text {
     height: 24px;
 }
+
+.item.done .note-text {
+    text-decoration: line-through;
+    color: #ccc;
+}
