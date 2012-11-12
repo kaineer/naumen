@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Backbone todo</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.rc.1/handlebars.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jStorage/0.3.0/jstorage.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.2/underscore-min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.2/backbone-min.js"></script>
+
+    <script type="text/javascript" src="./js/todo.js"></script>
+    <link rel="stylesheet" href="./css/todo.css" type="text/css" media="screen" />
+  </head>
+
+  <body>
+    <div id="content">
+      <h2>Список дел</h2>
+
+      <div id="paging">
+      </div>
+
+      <div id="items">
+      </div>
+      <div id="adding">
+        <div class="note">Нужно сделать</div>
+        <input type="text" id="todo" />
+        <button>Добавить</button>
+      </div>
+      <div id="done">
+        <button>Очистить выполненные</button>
+      </div>
+    </div>
+  </body>
+</html>

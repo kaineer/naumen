@@ -1,0 +1,67 @@
+#content {
+    width: 800px;
+    margin: auto;
+}
+
+#todo {
+    font-size: 18px;
+    width: 600px;
+    height: 24px;
+
+    padding: 0;
+    border: dotted 1px #000;
+}
+
+#todo:hover {
+    background-color: #FFFCBD;
+}
+
+#done button, #adding button {
+    height: 26px;
+}
+
+#done, #adding {
+    margin-top: 12px;
+}
+
+#banner {
+    font-size: 32px;
+}
+
+.item .check {
+    float: left;
+    height: 24px;
+}
+
+.item .note-text {
+    height: 24px;
+}
+
+.item.done .note-text {
+    text-decoration: line-through;
+    color: #ccc;
+}
+
+#paging {
+    margin-bottom: 32px;
+}
+
+#paging a {
+    display: block;
+    width: 24px;
+    padding: 8px;
+    float: left;
+    text-decoration: none;
+    text-align: center;
+    vertical-align: middle;
+    border: dotted 1px #000;
+    margin-right: 4px;
+}
+
+#paging a.active {
+    background-color: #B4DBE8;
+}
+
+#paging a:hover {
+    background-color: #D6EBF2;
+}
