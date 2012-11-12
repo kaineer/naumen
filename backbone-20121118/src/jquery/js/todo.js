@@ -3,6 +3,7 @@ $(function() {
   //
   var items = [];
   var page = 1;
+  var pageSize = 5;
 
   var count = 1;
 
@@ -54,9 +55,16 @@ $(function() {
       return "item";
     }
   };
-
+  
   var renderItems = function() {
-    return _(items).chain().map(function(item) {
+    var pageIdx, pageItems;
+
+    adjustPage();
+
+    pageIdx = page - 1;
+    pageItems = items.slice((pageIdx * pageSize), (pageIdx * pageSize) + pageSize);
+
+    return _(pageItems).chain().map(function(item) {
       return "<div class='" + itemDivClass(item) + "'>" + 
         "<div class='check'><input class='box' type='checkbox' id='" + item.id + 
           "'" + checkboxAttr(item) + "></div>" +
@@ -65,8 +73,15 @@ $(function() {
     }).inject(function(html, itemHtml) { return html + itemHtml; }, "").value();
   };
 
+  var adjustPage = function() {
+    var maxPage = Math.ceil(_.size(items) / pageSize);
+
+    if(page < 1) { page = 1; }
+    if(page > maxPage) { page = maxPage; }
+  };
+
   var renderPaging = function() {
-    var maxPage = Math.ceil(_.size(items) / 5);
+    var maxPage = Math.ceil(_.size(items) / pageSize);
     var i;
     var str = "";
 
@@ -74,11 +89,14 @@ $(function() {
       return "";
     }
 
-    if(page < 1) { page = 1; }
-    if(page > maxPage) { page = maxPage; }
+    adjustPage();
     
     for(i = 1; i <= maxPage; i++) {
-      str += "<a href='#" + i + "'>" + i + "</a>";
+      str += "<a href='#" + i + "'";
+      if(i == page) {
+        str += " class='active'";
+      }
+      str += "'>" + i + "</a>";
       if(i < maxPage) {
         str += "&nbsp;";
       }
@@ -105,7 +123,8 @@ $(function() {
   };
 
   var route = function(hash) {
-    console.log(hash);
+    page = hash.substring(1) * 1;
+    renderContent();
   };
 
   $("#adding button").click(addTODO);
@@ -121,7 +140,6 @@ $(function() {
     item.done = this.checked;
     storeItems();
     
-    // $(this).parents(".item")[item.done ? "addClass" : "removeClass"]("done");
     if(item.done) {
       $(this).parents(".item").addClass("done");
     } else {
@@ -139,6 +157,5 @@ $(function() {
   });
 
   loadItems();
-  renderContent();
   route(window.location.hash);
 });

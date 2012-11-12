@@ -41,3 +41,27 @@
     text-decoration: line-through;
     color: #ccc;
 }
+
+#paging {
+    margin-bottom: 32px;
+}
+
+#paging a {
+    display: block;
+    width: 24px;
+    padding: 8px;
+    float: left;
+    text-decoration: none;
+    text-align: center;
+    vertical-align: middle;
+    border: dotted 1px #000;
+    margin-right: 4px;
+}
+
+#paging a.active {
+    background-color: #B4DBE8;
+}
+
+#paging a:hover {
+    background-color: #D6EBF2;
+}
