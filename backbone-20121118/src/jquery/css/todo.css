@@ -1,0 +1,29 @@
+#content {
+    width: 800px;
+    margin: auto;
+}
+
+#todo {
+    font-size: 18px;
+    width: 600px;
+    height: 24px;
+
+    padding: 0;
+    border: dotted 1px #000;
+}
+
+#todo:hover {
+    background-color: #FFFCBD;
+}
+
+#adding button {
+    height: 26px;
+}
+
+#adding {
+    margin-top: 12px;
+}
+
+#banner {
+    font-size: 32px;
+}
