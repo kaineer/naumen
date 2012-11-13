@@ -5,7 +5,7 @@ var Todo = {};
 
 Todo.Model = Backbone.Model.extend({
   initialize: function() {
-    if(this.get("id") < 1000) {
+    if(!this.get("id")) {
       this.set({id: (new Date)*1}, {silent: true});
     }
     this.on("change", Todo.store);
@@ -194,7 +194,6 @@ Todo.AppView = Backbone.View.extend({
     this.collection.trigger("clean:done");
 
     if(this.router) {
-      console.log("boom");
       this.router.navigate(this.paging.get("page") + "");
     }
   }
@@ -218,6 +217,7 @@ $(function() {
     },
     store: function() {
       var json = JSON.stringify(Todo.items.toJSON());
+      console.log("Json: " + json);
       $.jStorage.set("todo-items", json);
     }
   });

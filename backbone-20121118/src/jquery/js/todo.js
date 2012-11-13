@@ -5,8 +5,6 @@ $(function() {
   var page = 1;
   var pageSize = 5;
 
-  var count = 1;
-
   var storeItems = function() {
     var json = JSON.stringify(items);
     $.jStorage.set("todo-items", JSON.stringify(items));

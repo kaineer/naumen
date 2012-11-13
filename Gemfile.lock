@@ -5,6 +5,7 @@ GEM
     activesupport (3.2.8)
       i18n (~> 0.6)
       multi_json (~> 1.0)
+    coderay (1.0.7)
     fetcher (0.1.0)
     i18n (0.6.1)
     kramdown (0.14.0)
@@ -29,4 +30,5 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  coderay
   slideshow
