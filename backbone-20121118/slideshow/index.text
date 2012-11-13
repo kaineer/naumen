@@ -1,0 +1,521 @@
+Title: Backbone
+Footer: Backbone vs jQuery
+
+Backbone
+========
+
+Один из способов разложить javascript по полочкам
+-------------------------------------------------
+
+<center><img src="../img/backbone1.gif" alt="" /></center>
+
+
+Backbone
+========
+
+Один из способов разложить javascript по полочкам
+-------------------------------------------------
+
+Альтернативы
+------------
+
+* Spine
+* Ember (он же SproutCore 2)
+* Knockout
+* JavascriptMVC
+
+... у меня просто не хватило пальцев.
+
+Зачем это нужно
+===============
+
+{% left %}
+
+jQuery
+------
+
+Сделать по-быстрому и больше никогда не возвращаться
+
+{% end %}
+
+{% right %}
+
+Backbone
+--------
+
+Мухи отдельно, котлеты отдельно.
+
+{% end %}
+
+
+Зачем это нужно
+===============
+
+{% left %}
+
+jQuery
+------
+
+Сделать по-быстрому и больше никогда не возвращаться
+
+{% end %}
+
+{% right %}
+
+Backbone
+--------
+
+Пишите код так, будто человек, который будет его поддерживать – маньяк-психопат, который знает, где вы живёте.
+
+{% end %}
+
+
+Тестовое приложение
+===================
+
+* Список дел
+* Возможность добавить новое дело, введя название, а затем щёлкнув по кнопке или нажав Enter
+* Возможность пометить дело, как выполненное
+* Возможность очистить список дел от уже выполненных по щелчку на кнопке
+* Разбиение списка на страницы по пять дел на страницу и переход между страницами (#1 - первая страница и т.п.)
+
+На jQuery и на Backbone
+
+<h2><a href="https://github.com/kaineer/naumen/tree/master/backbone-20121118/src">http://git.io/mYbUUw</a></h2>
+
+Плюсы
+=====
+
+{% left %}
+
+jQuery
+------
+
+* <u>Не нужно городить структуры данных</u>
+
+{% end %}
+
+{% right %}
+
+Backbone
+--------
+
+{% end %}
+
+~~~javascript
+  $(function() {
+  // ...
+    var items = [];
+    var page = 1;
+    var pageSize = 5;
+  // ...
+  });
+~~~
+
+
+Плюсы
+=====
+
+{% left %}
+jQuery
+------
+
+* Не нужно городить структуры данных
+* <u>Вся обработка сосредоточена в одном месте</u>
+{% end %}
+
+{% right %}
+
+Backbone
+--------
+
+{% end %}
+
+~~~javascript
+  var addTODO = function() {
+    addItem($("#todo").val());
+    renderContent();
+    $("#todo").val("");
+  };
+
+  $("#adding button").click(addTODO);
+  // ...
+~~~
+
+Ну или почти в одном
+
+
+Плюсы
+=====
+
+{% left %}
+
+jQuery
+------
+
+* Не нужно городить структуры данных
+* Вся обработка сосредоточена в <s>одном месте</s> <u>двух местах</u>
+
+{% end %}
+
+{% right %}
+
+Backbone
+--------
+
+{% end %}
+
+~~~javascript
+  var addTODO = function() {
+    addItem($("#todo").val());
+    renderContent();
+    $("#todo").val("");
+  };
+
+  $("#adding button").click(addTODO);
+  $("#todo").keydown(function(e) {
+    if(e.which == 13) { // Enter
+      addTODO();
+    }
+  });
+  // ...
+~~~
+
+Да кто вам считает?
+
+
+Плюсы
+=====
+
+{% left %}
+
+jQuery
+------
+
+* Не нужно городить структуры данных
+* Вся обработка сосредоточена в одном месте (как правило)
+* <u>Код пишется прямо по ходу добавления фич</u>
+{% end %}
+
+{% right %}
+
+Backbone
+--------
+
+{% end %}
+
+~~~javascript
+  $("#adding button").click(addTODO);
+  $("#todo").keydown(function(e) {
+  // ...
+  $("#items").on("click", ".check .box" // ...
+  // ...
+  $("#done button").click(function() {
+  // ...
+~~~
+
+Добавил обработчик и – забыл
+
+
+
+Плюсы
+=====
+
+{% left %}
+
+jQuery
+------
+
+* Не нужно городить структуры данных
+* Вся обработка сосредоточена в одном месте (как правило)
+* Код пишется прямо по ходу добавления фич
+* <u>Объём кода получается заметно меньше</u>
+
+{% end %}
+
+{% right %}
+
+Backbone
+--------
+
+{% end %}
+
+
+~~~
+$ wc src/*/js/todo.js -l
+ 159 src/jquery/js/todo.js
+ 257 src/backbone/js/todo.js
+~~~
+
+
+Плюсы
+=====
+
+{% left %}
+
+jQuery
+------
+
+* Не нужно городить структуры данных
+* Вся обработка сосредоточена в одном месте (как правило)
+* Код пишется прямо по ходу добавления фич
+* Объём кода получается заметно меньше
+
+{% end %}
+
+{% right %}
+
+Backbone
+--------
+
+* <u>Все операции с данными спрятаны в "модели"</u>
+
+{% end %}
+
+Данные могут быть не только основные (задачи), но и второстепенные -- разбиение по страницам.
+
+~~~javascript
+Todo.Paging = Backbone.Model.extend({
+  defaults: {
+    page: 1,
+    pageSize: 5,
+    maxPage: 1
+  },
+  recalc: function(collection) {
+  // ...
+  needsRender: function() {
+    return this.get("maxPage") > 1;
+  },
+  startOfPage: function() {
+  // ...
+  endOfPage: function() {
+  // ...
+});
+~~~
+
+
+
+Плюсы
+=====
+
+{% left %}
+
+jQuery
+------
+
+* Не нужно городить структуры данных
+* Вся обработка сосредоточена в одном месте (как правило)
+* Код пишется прямо по ходу добавления фич
+* Объём кода получается заметно меньше
+
+{% end %}
+
+{% right %}
+
+Backbone
+--------
+
+* Все операции с данными спрятаны в "модели"
+* <u>Рендеринг происходит исключительно во вьюхах</u>
+
+{% end %}
+
+~~~javascript
+Todo.ItemView = Backbone.View.extend({
+  // ...
+  template: Handlebars.compile(
+    "<div class='check'><input class='box' type='checkbox' id='{ {id}}'>" +
+    "</div><div class='note-text'>{ {note}}</div>"), // Ugm..
+
+  render: function() {
+    this.$el.html(this.template(this.model.toJSON()));
+    this.$el.addClass("item");
+    this.displayDone();
+    return this;
+  },
+
+  displayDone: function() {
+    this.$el.toggleClass('done', this.model.get('done'));
+    this.$el.find("input:checkbox").get(0).checked = this.model.get("done");
+  }
+  // ...
+});
+~~~
+
+
+Плюсы
+=====
+
+{% left %}
+
+jQuery
+------
+
+* Не нужно городить структуры данных
+* Вся обработка сосредоточена в одном месте (как правило)
+* Код пишется прямо по ходу добавления фич
+* Объём кода получается заметно меньше
+
+{% end %}
+
+{% right %}
+
+Backbone
+--------
+
+* Все операции с данными спрятаны в "модели"
+* Рендеринг происходит исключительно во вьюхах
+* <u>Обработчики событий просто меняют данные..</u>
+
+{% end %}
+
+~~~javascript
+  // in AppView
+  addTodo: function(e) {
+    var $todo = this.$el.find("#todo");
+    var note = $todo.val();
+    this.collection.push(new Todo.Model({note: note})); // --> дёргает событие "add"
+    $todo.val("");
+  },
+  // ...
+  cleanDone: function() {
+    // ...
+    this.collection.trigger("clean:done"); // --> явно дёргается событие "clean:done"
+  // in ItemView
+  toggleDone: function(e) {
+    this.model.set({done: e.target.checked}); // --> дёргает события "change" и "change:done"
+  },
+// ...
+~~~
+
+
+
+Плюсы
+=====
+
+{% left %}
+
+jQuery
+------
+
+* Не нужно городить структуры данных
+* Вся обработка сосредоточена в одном месте (как правило)
+* Код пишется прямо по ходу добавления фич
+* Объём кода получается заметно меньше
+
+{% end %}
+
+{% right %}
+
+Backbone
+--------
+
+* Все операции с данными спрятаны в "модели"
+* Рендеринг происходит исключительно во вьюхах
+* Обработчики событий просто меняют данные. <u>Все, кому нужно отслеживать изменения, на них подписываются</u>
+
+{% end %}
+
+~~~javascript
+Todo.AppView = Backbone.View.extend({
+  initialize: function(options) {
+    this.collection.on("add clean:done", this.render, this);
+  },
+  // ...
+Todo.PagingView = Backbone.View.extend({
+  // ...
+  initialize: function() {
+    // ...
+    this.collection.on("add clean:done", this.render, this);
+    this.collection.on("add clean:done", this.recalcPaging, this);
+// ...
+~~~
+
+
+Плюсы
+=====
+
+{% left %}
+
+jQuery
+------
+
+* Не нужно городить структуры данных
+* Вся обработка сосредоточена в одном месте (как правило)
+* Код пишется прямо по ходу добавления фич
+* Объём кода получается заметно меньше
+
+{% end %}
+
+{% right %}
+
+Backbone
+--------
+
+* Все операции с данными спрятаны в "модели"
+* Рендеринг происходит исключительно во вьюхах
+* Обработчики событий просто меняют данные. Все, кому нужно отслеживать изменения, на них подписываются
+* <u>Механизм роутинга "из коробки"</u>
+
+{% end %}
+
+Реализация на jQuery несложная, но это потому, что хэш -- просто число, 
+а ссылки есть только для перехода по страницам.
+
+{% left %}
+~~~javascript
+  var route = function(hash) {
+    page = hash.substring(1) * 1;
+    renderContent();
+  };
+  // ...
+  $("#paging").on("click", "a", function(e) {
+    route(this.hash);
+  });
+
+  loadItems();
+  route(window.location.hash);
+~~~
+{% end %}
+
+{% right %}
+~~~javascript
+  Todo.Router = Backbone.Router.extend({
+    routes: {
+      "": "page",
+      ":pageNo": "page"
+    },
+    
+    page: function(pageNo) {
+      pageNo || (pageNo = 1);
+      pagingView.paging.set({page: pageNo});
+    }
+  });
+
+  App.router = new Todo.Router();
+
+  Backbone.history.start();
+~~~
+{% end %}
+
+
+Итог
+====
+
+jQuery
+------
+Подходящий инструмент, чтобы выстрелить себе в ногу,
+не требует предварительной подготовки, однако плохо справляется
+с ногами сложной конфигурации.
+
+Backbone
+--------
+Абсолютно не подходит для решения простых задач.
+С ростом количества сущностей и взаимосвязей между ними
+смысл использовать Backbone возрастает.
+
+<br><br><br>
+P.S. Разумеется, можно написать код на jQuery с поддержкой
+событий, роутинга, вьюх и моделей. Но тогда это будет уже свой
+фрэймворк, с маджонгом и гейшами.
+
